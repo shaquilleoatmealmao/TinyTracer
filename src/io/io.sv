@@ -111,11 +111,11 @@ module io (
     typedef enum logic [1:0] {
         RX_IDLE,
         RX_RENDER,
-        RX_OBJ
+        RX_OBJECT
     } parser_state_t;
 //basically parser_state_t can take one of 3 values of idle, render and obj and will handle it accordinly which it can recognize the types via the first byte of the message, as defined earlier
 //parser is just something to determine whether something is an ovject or a render message, and then send the data to the appropriate interface, and it will also handle the escape character, which is 03, which is used to escape the start bytes of 00 and 01, so that they can be sent as data bytes instead of being recognized as start bytes
-    rx_state_t rx_state;
+    parser_state_t rx_state;
     logic rx_escape; //used for the escape character, 03
     logic [1:0] rx_index; //seeing how many bytes received in current message, used to know when to switch states
     logic [7:0] dim_low; //used to store low bype of dimension, which is 12, so needs 2 bytes
