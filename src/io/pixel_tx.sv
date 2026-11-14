@@ -19,12 +19,20 @@ module pixel_tx (
     logic       esc_sent;   // DLE for the current colour byte already sent
     logic       busy;       // a pixel is held and being sent
 
+    // Take a new pixel only when the last one is fully sent.
+    assign pixel.ready = !busy;
+
     always_ff @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             colour_reg <= '0;
             byte_idx   <= 2'd0;
             esc_sent   <= 1'b0;
             busy       <= 1'b0;
+        end else if (pixel.valid && pixel.ready) begin
+            colour_reg <= pixel.colour;
+            byte_idx   <= 2'd0;
+            esc_sent   <= 1'b0;
+            busy       <= 1'b1;
         end
     end
 
